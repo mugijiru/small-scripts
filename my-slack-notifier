@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+
+require 'slack-ruby-client'
+
+channel = ARGV.shift
+text    = ARGV.shift
+
+Slack.configure do |config|
+  config.token = ENV['MY_SLACK_TOKEN']
+end
+
+client = Slack::Web::Client.new
+
+raise "Token is not valid." unless client.auth_test["ok"]
+
+client.chat_postMessage(channel: channel, text: text, username: "Emacs", icon_emoji: "emacs")
