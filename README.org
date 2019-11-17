@@ -1,0 +1,43 @@
+* 日常利用している小スクリプト群
+
+** Usage
+
+   適当なところにチェックアウトして PATH を通しておきます
+
+   #+begin_src sh
+   $ git clone git@github.com:mugijiru/small-scripts.git /path/to/scripts
+   $ echo 'export PATH="$PATH:/path/to/scripts"' >>~/.zshrc
+   #+end_src
+
+** Scripts
+*** my-slack-notifier
+
+    Slack の任意のチャンネルに任意のテキストを飛ばすだけのシンプルなスクリプト。
+    Emacs で利用するためにアイコンも名前も Emacs にしています
+    ただしアイコンは自分で Slack に :emacs: という絵文字として登録しておく必要あります
+
+*** Dependency
+    - Ruby :: 2.3以上
+      - 依存している slack-ruby-client という Gem が CI でテストしている一番古いバージョン
+    - slack-ruby-client gem :: ~> 0.14.4
+      - 実装時にインストールしたバージョンが 0.14.4
+
+**** Usage
+     Slack の[[https://api.slack.com/custom-integrations/legacy-tokens][レガシートークン]]を利用しているので
+     それを取得して、以下のようにして環境変数に設定してください
+
+     #+begin_src
+     export MY_SLACK_TOKEN="YOUR_SLACK_LEGACY_TOKEN"
+     #+end_src
+
+     設定が済んだらスクリプトを実行します。
+     第一引数にチャンネル名、第二引数にメッセージを入れます
+
+     #+begin_src sh
+     $ my-slack-notifier channel text
+     #+end_src
+
+***** Example
+      #+begin_example
+      $ my-slack-notifier "#general" "Hello, world"
+      #+end_example
