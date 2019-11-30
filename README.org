@@ -31,6 +31,8 @@
       #+end_example
 
       [[./images/done_notify.png]]
+      [[https://github.com/mugijiru/small-scripts/blob/master/images/done_notify.png]]
+
 
 *** my-slack-notifier
     Slack の任意のチャンネルに任意のテキストを飛ばすだけのシンプルなスクリプト。
