@@ -13,7 +13,7 @@ pr_id = matches[1].to_i
 
 client = Octokit::Client.new(access_token: token)
 
-pull_request = client.pull_request("#{organization}/#{repository}", pr_id, state: :open)
+pull_request = client.pull_request("#{organization}/#{repository}", pr_id)
 
 raise "PR not found #{url}" unless pull_request
 
