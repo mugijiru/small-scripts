@@ -1,0 +1,3 @@
+#!/bin/sh
+
+git diff -w `git show-branch --merge-base $1 HEAD` HEAD
