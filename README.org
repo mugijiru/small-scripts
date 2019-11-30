@@ -18,11 +18,11 @@
     Emacs で利用するためにアイコンも名前も Emacs にしています
     ただしアイコンは自分で Slack に :emacs: という絵文字として登録しておく必要あります
 
-*** Dependency
-    - Ruby :: 2.3以上
-      - 依存している slack-ruby-client という Gem が CI でテストしている一番古いバージョン
-    - slack-ruby-client gem :: ~> 0.14.4
-      - 実装時にインストールしたバージョンが 0.14.4
+**** Dependency
+     - Ruby :: 2.3以上
+       - 依存している slack-ruby-client という Gem が CI でテストしている一番古いバージョン
+     - slack-ruby-client gem :: ~> 0.14.4
+       - 実装時にインストールしたバージョンが 0.14.4
 
 **** Usage
      Slack の[[https://api.slack.com/custom-integrations/legacy-tokens][レガシートークン]]を利用しているので
@@ -42,4 +42,42 @@
 ***** Example
       #+begin_example
       $ my-slack-notifier "#general" "Hello, world"
+      #+end_example
+
+*** release-note.rb
+    リリースする度に Slack で報告しているけど、
+    毎度の報告用テキストを作るのがだるいので
+    git-pr-release で作られた PR の description を加工するスクリプトを作ってた。
+
+    API 連携はしてないので Description の内容は自分でコピーしないといけないし、
+    リリース報告に不要な PR とかは適宜手で取り除いて報告していた。
+    という、無いよりはマシ程度のスクリプト。
+
+**** Dependency
+     - Ruby :: 2.3 以上
+       - 新しい文法を使ってるわけでもないので 2.0 とかでも動きそう
+
+**** Usage
+     1. デフォルトの git-pr-release のテンプレートを使って git-pr-release でリリース作業をする
+     2. git-pr-release で作られた PR の description を手でコピーして
+     3. ~pbpaste | release-note.rb~
+
+***** Example
+      #+begin_example
+      - [x] #57 Gemfileの整理 @mugijiru
+      #+end_example
+
+      という内容がクリップボードにある時は以下のようになる
+
+      #+begin_example
+      % pbpaste | release-note.rb
+      @channel
+      お疲れ様です。
+      先程、以下のリリースを行いました
+
+      https://github.com/XXXXXX/YYYYY/pull/57
+      Gemfileの整理
+
+      以上になります。
+      どうぞよろしくお願いします
       #+end_example
