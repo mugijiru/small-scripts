@@ -12,6 +12,25 @@
    #+end_src
 
 ** Scripts
+*** branch_name_from_pr
+    GitHub の PR の URL からブランチ名を取得するだけの単純なスクリプト。
+    基本的に他のスクリプトと組み合わせて使う
+
+**** Dependency
+     - Ruby
+     - Octokit gem
+
+**** Usage
+     #+begin_example
+     $ branch_name_from_pr GITHUB_PR_URL
+     #+end_example
+
+***** Example
+      #+begin_example
+      % branch_name_from_pr https://github.com/mugijiru/small-scripts/pull/4
+      add-branch-name-from-pr
+      #+end_example
+
 *** done_notify
     何かの実行が終了した時に通知するためのスクリプト。
     実行時間がかかる処理の最後に呼び出すとデスクトップ通知が来てちょっと便利。
