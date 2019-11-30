@@ -75,6 +75,8 @@
 **** Dependency
      - Ruby :: 2.3 以上
        - 新しい文法を使ってるわけでもないので 2.0 とかでも動きそう
+     - git-pr-release
+       - 直接は使ってないけど、こいつの出力を利用しているので
 
 **** Usage
      1. デフォルトの git-pr-release のテンプレートを使って git-pr-release でリリース作業をする
