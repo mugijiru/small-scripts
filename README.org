@@ -32,6 +32,34 @@
 
       [[./images/done_notify.png]]
 
+*** git-diff-from
+    GitHub の PR みたいに
+    マージ先との差分を見たい時に使ってるスクリプト。
+
+    push 前に差分をチェックしておくと恥ずかしい PR を出さずに済んで便利
+
+**** Dependency
+     - Git
+
+**** Usage
+     #+begin_example
+     $ git diff-from branch-name
+     #+end_example
+
+***** Example
+      #+begin_example
+      % git diff-from master
+      diff --git a/git-diff-from b/git-diff-from
+      new file mode 100755
+      index 0000000..7c2e0d0
+      --- /dev/null
+      +++ b/git-diff-from
+      @@ -0,0 +1,3 @@
+      +#!/bin/sh
+      +
+      +git diff -w `git show-branch --merge-base $1 HEAD` HEAD
+      #+end_example
+
 *** my-slack-notifier
     Slack の任意のチャンネルに任意のテキストを飛ばすだけのシンプルなスクリプト。
     Emacs で利用するためにアイコンも名前も Emacs にしています。
