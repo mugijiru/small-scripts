@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+
+require 'octokit'
+
+organization = ENV['MY_GITHUB_ORGANIZATION']
+repository   = ENV['MY_GITHUB_REPOSITORY']
+token        = ENV['MY_GITHUB_TOKEN']
+raise 'Environment Variable "MY_GITHUB_TOKEN" is not defined.' unless token
+
+url = ARGV[0]
+matches = url.match(%r{^https://github.com/#{organization}/#{repository}/pull/([0-9]+)})
+pr_id = matches[1].to_i
+
+client = Octokit::Client.new(access_token: token)
+
+pull_request = client.pull_request("#{organization}/#{repository}", pr_id, state: :open)
+
+raise "PR not found #{url}" unless pull_request
+
+branch_name = pull_request[:head][:label].sub("#{organization}:", '')
+puts branch_name
