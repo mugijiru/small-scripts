@@ -12,8 +12,25 @@
    #+end_src
 
 ** Scripts
-*** my-slack-notifier
+*** done_notify
+    何かの実行が終了した時に通知するためのスクリプト。
+    実行時間がかかる処理の最後に呼び出すとデスクトップ通知が来てちょっと便利。
+    中身はただの terminal-notifier のラッパー
 
+**** Dependency
+     - terminal-notifier
+
+**** Usage
+     #+begin_example
+     $ done_notify title text
+     #+end_example
+
+***** Example
+      % done_notify Shell 'Finish heavy process!'                                                                                                                                         (git)-[add-done-notify]
+
+      [[./images/done_notify.png]]
+
+*** my-slack-notifier
     Slack の任意のチャンネルに任意のテキストを飛ばすだけのシンプルなスクリプト。
     Emacs で利用するためにアイコンも名前も Emacs にしています。
     ただしアイコンは自分で Slack に :emacs: という絵文字として登録しておく必要あります。
