@@ -3,6 +3,11 @@
 dir=$MY_DEPLOY_DIR
 url=$1
 
+if [ ! $dir ]; then
+    echo "ERR: MY_DEPLOY_DIR is required." >&2
+    exit 1
+fi
+
 cd $dir
 
 if [ ! $url ]; then
