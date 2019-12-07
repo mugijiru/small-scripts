@@ -31,6 +31,25 @@
       add-branch-name-from-pr
       #+end_example
 
+*** count_issue
+    GitHub の指定したラベルの Issue の数をカウントするスクリプト
+
+*** Dependency
+    - octokit gem
+    - gemoji
+
+*** Usage
+    #+begin_example
+    $ count_issue MY_ORGANIZATION REPOSITORY label1 [...]
+    #+end_example
+
+**** Example
+     #+begin_example
+     % count_issue MY_ORGANIZATION REPOSITORY ":skull:System Bug" ":gift:Tech Issue"
+     💀 System Bug   6
+     🎁 Tech Issue   5
+     #+end_example
+
 *** deploy
     capistrano の wrapper script
     デプロイ先の選択と、デプロイブランチの選択ができる。
