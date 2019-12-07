@@ -26,7 +26,8 @@ else
     branch=$(branch_name_from_pr ${url})
 fi
 
-echo "bundle exec cap ${server} deploy DEPLOY_BRANCH=${branch}" | tee | pbcopy
+echo "bundle exec cap ${server} deploy DEPLOY_BRANCH=${branch}"
+echo "bundle exec cap ${server} deploy DEPLOY_BRANCH=${branch}" | pbcopy
 export BUNDLE_GEMFILE=Gemfile
 bundle exec cap $server deploy DEPLOY_BRANCH=$branch
 done_notify 'Finish deploy' "deploy '${branch}' to ${server} was finished"
