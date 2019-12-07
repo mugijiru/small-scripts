@@ -31,6 +31,40 @@
       add-branch-name-from-pr
       #+end_example
 
+*** deploy
+    capistrano の wrapper script
+    デプロイ先の選択と、デプロイブランチの選択ができる。
+    デプロイブランチは GitHub の URL を引数に指定することもできる
+
+**** Dependency
+     - このリポジトリ内のファイル
+       - branch_name_from_pr
+       - done_notify
+     - 他
+       - [[https://github.com/peco/peco][peco]]
+       - [[https://github.com/github/hub][hub command]]
+       - Capistrano
+
+**** Usage
+***** 引数指定なし
+      #+begin_example
+      $ deploy
+      #+end_example
+
+      まず最初にデプロイ先のリストが peco で表示されるのでそこから選択し、
+      次にデプロイするブランチを peco で選択。
+
+      デプロイ先を選択している時に非同期で GitHub のブランチを取得しているので
+      デプロイ先の選択が早いと少し待たされます。
+
+***** PR URL を指定
+      #+begin_example
+      % deploy https://github.com/YOUR_ORGANIZATION/YOUR_REPOSITORY/pull/PR_NUM
+      #+end_example
+
+      まず最初にデプロイ先のリストが peco で表示されるのでそこから選択すると
+      デプロイが始まります
+
 *** done_notify
     何かの実行が終了した時に通知するためのスクリプト。
     実行時間がかかる処理の最後に呼び出すとデスクトップ通知が来てちょっと便利。
