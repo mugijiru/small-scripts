@@ -1,0 +1,24 @@
+#! /bin/sh
+
+db_name=$1
+base_dir=$2
+
+if [ ! $db_name ]; then
+    echo 'ERR: db_name is requried' >&2
+    exit 1
+fi
+
+if [ ! $base_dir ]; then
+    echo 'ERR: base_dir is requried' >&2
+    exit 1
+fi
+
+dump_dir=$base_dir/sql
+mkdir -p dump_dir
+
+date=`date +'%Y%m%d'`
+cnt=`ls ${dump_dir}/${date}??.dump.gz | wc -l | tr -d ' ' | tr -d "\012"`
+cnt_str=$(printf "%02d" $((cnt)))
+dump_path=${dump_dir}/${date}${cnt_str}.dump
+mysqldump -u root -h 127.0.0.1 ${db_name} > ${dump_path}
+gzip $dump_path

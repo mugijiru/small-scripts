@@ -85,6 +85,69 @@
 
       [[./images/done_notify.png]]
 
+*** dump_with_date
+    ローカル環境の mysqldump を取るスクリプト
+    指定したディレクトリの下に sql というディレクトリを掘ってそこにデータを保存する。
+
+    開発中にデータを戻したいことがよくあるので作った
+    戻す時は [[*load_from_dump]] を使う
+
+*** Dependency
+    - MySQL
+
+*** Usage
+    #+begin_example
+    $ dump_with_date database_name dump_base_dir
+    #+end_example>
+
+**** Example
+     #+begin_example
+     $ dump_with_date hoge_db /path/to/app
+     #+end_example
+
+*** load_from_dump
+    [[*dump_with_date]] で dump したデータを戻すのに使うスクリプト
+
+    dump_with_date が日付と番号を振るので
+    それを引数に指定することで
+    指定したデータを戻すこともできる。
+    指定しなかった場合には最新のデータを戻す
+
+*** Dependency
+    - [[*dump_with_date]]
+    - MySQL
+
+*** Usage
+    #+begin_example
+    $ load_from_dump database_name dump_base_dir num date
+    #+end_example
+
+**** 最新データを戻す
+     #+begin_example
+     $ load_from_dump database_name dump_base_dir
+     #+end_example
+
+**** その日のデータを番号指定で戻す
+     #+begin_example
+     $ load_from_dump database_name dump_base_dir num
+     #+end_example
+
+     番号は 0-99 まで。0詰めは自動で行う。
+
+**** 指定日のデータを番号指定で戻す
+     #+begin_example
+     $ load_from_dump database_name dump_base_dir num date
+     #+end_example
+
+     - 番号は 0-99 まで。0詰めは自動で行う。
+     - 日付は YYYYMMDD 形式
+
+**** Example
+     #+begin_example
+     $ dump_with_date hoge_db /path/to/app
+     #+end_example
+
+
 *** git-diff-from
     GitHub の PR みたいに
     マージ先との差分を見たい時に使ってるスクリプト。
