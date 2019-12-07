@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+
+require 'octokit'
+require 'gemoji'
+
+organization = ARGV.shift
+repository   = ARGV.shift
+labels       = ARGV
+
+raise 'MY_GITHUB_TOKEN not defined.' unless ENV['MY_GITHUB_TOKEN']
+client = Octokit::Client.new(access_token: ENV['MY_GITHUB_TOKEN'])
+
+labels.each do |label|
+  issues = client.search_issues("repo:#{organization}/#{repository} is:issue is:open label:\"#{label}\"", per_page: 100)
+  emojified_label = label.gsub(/:(?<emoji>.+?):(?<body>.*)$/) do
+    emoji = Emoji.find_by_alias($1)
+    emoji ? "#{emoji.raw} #{$2}" : "[#{$2}]"
+  end
+
+  puts "#{emojified_label}\t#{issues.total_count}"
+end
