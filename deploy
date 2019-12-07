@@ -1,0 +1,27 @@
+#!/bin/sh
+
+dir=$MY_DEPLOY_DIR
+url=$1
+
+cd $dir
+
+if [ ! $url ]; then
+    echo 'execute `git fetch` ...'
+    hub sync > /dev/null 2 >& 1 &
+fi
+
+server=`ls -1 config/deploy/*.rb | sed 's:config/deploy/::; s:\.rb::' | grep -v production | peco`
+
+if [ ! $url ]; then
+    echo 'Waiting hub sync...'
+    wait
+    branch=`git br -r | awk '{print $1}' | grep origin | sed 's|origin/||' | peco`
+else
+    echo 'Fetch branch name from url...'
+    branch=$(branch_name_from_pr ${url})
+fi
+
+echo "bundle exec cap ${server} deploy DEPLOY_BRANCH=${branch}" | tee | pbcopy
+export BUNDLE_GEMFILE=Gemfile
+bundle exec cap $server deploy DEPLOY_BRANCH=$branch
+done_notify 'Finish deploy' "deploy '${branch}' to ${server} was finished"
