@@ -144,6 +144,34 @@
       $ my-slack-notifier "#general" "Hello, world"
       #+end_example
 
+*** precompile_and_notify
+    Rails の assets:precompile を行うスクリプト。
+    終了時にデスクトップ通知するようにしている。
+
+    自社の assets ファイルが多過ぎて
+    手元で Feature spec を長す時に先に precompile しないと
+    画面が表示されずにタイムアウトしてしまうし、
+    開発時も同じく待たされることが多いので作った。
+
+**** Dependency
+     - このリポジトリ内のファイル
+       - done_notify
+     - 他
+       - Rails
+
+**** Usage
+***** development env
+      #+begin_example
+      $ cd /path/to/rails_app_dir
+      $ precompile_and_notify
+      #+end_example
+
+***** test env
+      #+begin_example
+      $ cd /path/to/rails_app_dir
+      $ precompile_and_notify test
+      #+end_example
+
 *** release-note.rb
     リリースする度に Slack で報告しているけど、
     毎度の報告用テキストを作るのがだるいので

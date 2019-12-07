@@ -1,0 +1,10 @@
+#!/bin/sh
+
+rails_env=$1
+if [[ $rails_env != "test" ]]; then
+    rails_env='development'
+fi
+
+yarn
+time WEBPACKER_PRECOMPILE=false RAILS_ENV=$rails_env ./bin/bundle exec spring rake assets:precompile
+done_notify 'Finish precompile' 'assets:precomple was finished'
