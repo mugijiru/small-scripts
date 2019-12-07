@@ -1,0 +1,32 @@
+#!/bin/sh
+
+db_name=$1
+base_dir=$2
+cnt=$3
+date=$4
+
+if [ ! $db_name ]; then
+    echo 'ERR: db_name is requried' >&2
+    exit 1
+fi
+
+if [ ! $base_dir ]; then
+    echo 'ERR: base_dir is requried' >&2
+    exit 1
+fi
+
+dump_dir=$base_dir/sql
+
+if [ ! $date ]; then
+  date=`date +'%Y%m%d'`
+fi
+
+if [ ! $cnt ]; then
+  cnt=`ls ${dump_dir}/${date}??.dump.gz | wc -l | tr -d ' ' | tr -d "\012"`
+  cnt=$((cnt - 1))
+fi
+cnt_str=$(printf "%02d" $((cnt)))
+
+dump_path=${dump_dir}/${date}${cnt_str}.dump.gz
+echo "gzcat $dump_path | mysql -u root -h 127.0.0.1 ${db_name}"
+gzcat $dump_path | mysql -u root -h 127.0.0.1 ${db_name}
