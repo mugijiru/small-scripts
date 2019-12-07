@@ -274,3 +274,24 @@
       以上になります。
       どうぞよろしくお願いします
       #+end_example
+*** review-requested-prs
+    指定したリポジトリで
+    レビューを依頼されてる PR 一覧を取得するスクリプト
+
+**** Dependency
+     - octokit gem
+     - gemoji gem
+
+**** Usage
+     #+begin_example
+     $ review-requested-prs organization repository
+     #+end_example
+
+***** Example
+      #+begin_example
+      % review-requested-prs MY_ORGANIZATION REPOSITORY
+      #XXX メソッド名を変更する [🙏 Review]
+          https://github.com/MY_ORGANIZATION/REPOSITORY/pull/XXX
+      #YYY デザイン修正 [🙏 Review]
+          https://github.com/MY_ORGANIZATION/REPOSITORY/pull/YYY
+      #+end_example
