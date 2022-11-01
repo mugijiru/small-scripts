@@ -12,15 +12,24 @@ if ARGV.size < 2
   raise 'argument error'
 end
 
-params = ARGV.getopts('m:')
+params = ARGV.getopts('m:', 'ignore-labels:', 'ignore-title:')
 
 repository   = ARGV.pop
 organization = ARGV.pop
 
 client = Octokit::Client.new(access_token: ENV['MY_GITHUB_TOKEN'])
 
-prs = client.search_issues("repo:#{organization}/#{repository} is:pr is:open review-requested:#{client.user.login}", per_page: 100)
+prs = client.search_issues("repo:#{organization}/#{repository} is:pr is:open draft:false review-requested:#{client.user.login}", per_page: 100)
 prs.items.each do |pr_item|
+  ignore_title = params.fetch('ignore-title')
+  next if ignore_title && pr_item.title.include?(params.fetch('ignore-title'))
+
+  ignore_labels_opt = params.fetch('ignore-labels')
+  if ignore_labels_opt
+    ignore_labels = ignore_labels_opt.split(',')
+    next if pr_item.labels.any? { |label| ignore_labels.include?(label.name) }
+  end
+
   labels = pr_item.labels.map do |label|
     label.name.gsub(/:(?<emoji>.+?):(?<body>.*)$/) do
       emoji = Emoji.find_by_alias($1)
