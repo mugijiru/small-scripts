@@ -2,27 +2,40 @@
 
 require 'octokit'
 require 'gemoji'
+require 'optparse'
+require 'json'
 
 raise 'MY_GITHUB_TOKEN not defined.' unless ENV['MY_GITHUB_TOKEN']
-unless ARGV.size == 2
-  STDERR.puts "usage: review-requested-prs organization repository"
+
+if ARGV.size < 2
+  STDERR.puts 'usage: review-requested-prs organization repository'
   raise 'argument error'
 end
 
-organization = ARGV.shift
-repository   = ARGV.shift
+params = ARGV.getopts('m:')
+
+repository   = ARGV.pop
+organization = ARGV.pop
 
 client = Octokit::Client.new(access_token: ENV['MY_GITHUB_TOKEN'])
 
 prs = client.search_issues("repo:#{organization}/#{repository} is:pr is:open review-requested:#{client.user.login}", per_page: 100)
 prs.items.each do |pr_item|
   labels = pr_item.labels.map do |label|
-    emojified_label = label.name.gsub(/:(?<emoji>.+?):(?<body>.*)$/) do
+    label.name.gsub(/:(?<emoji>.+?):(?<body>.*)$/) do
       emoji = Emoji.find_by_alias($1)
       emoji ? "#{emoji.raw} #{$2}" : "[#{$2}]"
     end
-    "[#{emojified_label}]"
   end
-  puts "##{pr_item.number} #{pr_item.title} #{labels.join}"
-  puts "    #{pr_item.html_url}"
+
+  if params.fetch('m') == 'json'
+    requested_reviewers = pr_item.requested_reviewers&.map(&:login)
+    is_review_requested = requested_reviewers&.include?("mugijiru")
+    json = { number: pr_item.number, title: pr_item.title, tags: labels, is_review_requested: is_review_requested, requested_reviewers: requested_reviewers }.to_json
+    puts json
+  else
+    joined_labels = labels.map { |label| "[#{label}]" }.join
+    puts "##{pr_item.number} #{pr_item.title} #{joined_labels}"
+    puts "    #{pr_item.html_url}"
+  end
 end
