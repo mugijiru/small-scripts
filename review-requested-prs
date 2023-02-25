@@ -8,7 +8,7 @@ require 'json'
 raise 'MY_GITHUB_TOKEN not defined.' unless ENV['MY_GITHUB_TOKEN']
 
 if ARGV.size < 2
-  STDERR.puts 'usage: review-requested-prs organization repository'
+  warn 'usage: review-requested-prs organization repository'
   raise 'argument error'
 end
 
@@ -19,7 +19,11 @@ organization = ARGV.pop
 
 client = Octokit::Client.new(access_token: ENV['MY_GITHUB_TOKEN'])
 
-prs = client.search_issues("repo:#{organization}/#{repository} is:pr is:open draft:false review-requested:#{client.user.login}", per_page: 100)
+json_mode = params.fetch('m') == 'json'
+array = []
+prs = client.search_issues(
+  "repo:#{organization}/#{repository} is:pr is:open draft:false review-requested:#{client.user.login}", per_page: 100
+)
 prs.items.each do |pr_item|
   ignore_title = params.fetch('ignore-title')
   next if ignore_title && pr_item.title.include?(params.fetch('ignore-title'))
@@ -32,19 +36,21 @@ prs.items.each do |pr_item|
 
   labels = pr_item.labels.map do |label|
     label.name.gsub(/:(?<emoji>.+?):(?<body>.*)$/) do
-      emoji = Emoji.find_by_alias($1)
-      emoji ? "#{emoji.raw} #{$2}" : "[#{$2}]"
+      emoji = Emoji.find_by_alias(Regexp.last_match(1))
+      emoji ? "#{emoji.raw} #{Regexp.last_match(2)}" : "[#{Regexp.last_match(2)}]"
     end
   end
 
-  if params.fetch('m') == 'json'
+  if json_mode
     requested_reviewers = pr_item.requested_reviewers&.map(&:login)
-    is_review_requested = requested_reviewers&.include?("mugijiru")
-    json = { number: pr_item.number, title: pr_item.title, tags: labels, is_review_requested: is_review_requested, requested_reviewers: requested_reviewers }.to_json
-    puts json
+    is_review_requested = requested_reviewers&.include?('mugijiru')
+    obj = { number: pr_item.number, title: pr_item.title, tags: labels, is_review_requested: is_review_requested, requested_reviewers: requested_reviewers }
+    array.push obj
   else
     joined_labels = labels.map { |label| "[#{label}]" }.join
     puts "##{pr_item.number} #{pr_item.title} #{joined_labels}"
     puts "    #{pr_item.html_url}"
   end
 end
+
+puts array.to_json if json_mode
